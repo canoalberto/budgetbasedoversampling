@@ -1,4 +1,4 @@
-package experiments.active;
+package experiments.active.uncertainty;
 
 import java.io.File;
 
@@ -6,32 +6,25 @@ import org.apache.commons.lang3.SystemUtils;
 
 import utils.Utils;
 
-public class Real {
+public class Semisynth {
 
 	public static void main(String[] args) throws Exception {
 		
 		String absolutePath = SystemUtils.IS_OS_UNIX ? "/home/acano/Downloads/activelearning/" : "D:/activelearning/";
-		String resultsPath = "results/real/";
+		String resultsPath = "results/uncertainty/semi-synth/";
 
 		String[] datasets = new String[] {
-				"activity",
-				"connect-4",
-				"CovPokElec",
-				"covtype",
-				"crimes",
-				"fars",
-				"gas",
-				"hypothyroid",
-				"kddcup",
-				"kr-vs-k",
-				"lymph",
-				"olympic",
-				"poker",
-				"sensor",
-				"shuttle",
-				"tags",
-				"thyroid",
-				"zoo",
+				"CRIMES-D1",
+				"DJ30-D1",
+				"GAS-D1",
+				"OLYMPIC-D1",
+				"POKER-D1",
+				"SENSOR-D1",
+				"TAGS-D1",
+				"ACTIVITY_RAW-D1",
+				"ACTIVITY-D1",
+				"CONNECT4-D1",
+				"COVERTYPE-D1",
 		};
 		
 		String[] algorithms = new String[] {
@@ -43,9 +36,6 @@ public class Real {
 				"moa.classifiers.meta.AdaptiveRandomForest",
 				"moa.classifiers.meta.OOB",
 				"moa.classifiers.meta.UOB",
-
-				//"moa.classifiers.active.CALMID" 	should be called on its own
-				//"moa.classifiers.active.MicFoal"	should be called on its own
 		};
 
 		String[] algorithmsFilename = new String[algorithms.length];
@@ -103,7 +93,7 @@ public class Real {
 						String filename = absolutePath+resultsPath + algorithmsFilename[alg] + "-" + datasets[dataset] + "-" + activeLearningStrategies[strategy] + "-" + budgets[budget] + ".csv";
 
 						if(!new File(filename).exists()) {
-							System.out.print("real-" + seq + " ");
+							System.out.print("semi-" + seq + " ");
 						}
 						
 						seq++;
@@ -122,12 +112,12 @@ public class Real {
 						String filename = absolutePath+resultsPath + algorithmsFilename[alg] + "-" + datasets[dataset] + "-" + activeLearningStrategies[strategy] + "-" + budgets[budget] + ".csv";
 	
 						if(!new File(filename).exists()) {
-							System.out.println("real-" + seq + ": ");
+							System.out.println("semi-" + seq + ": ");
 							
 							System.out.println("\tjava " + VMargs + " -javaagent:sizeofag-1.0.4.jar -cp " + jarFile + " "
 									+ "moa.DoTask moa.tasks.meta.ALPrequentialEvaluationTask"
 									+ " -e \"(ALMultiClassImbalancedPerformanceEvaluator -w 500)\""
-									+ " -s \"(ArffFileStream -f datasets/real/" + datasets[dataset] + ".arff)\"" 
+									+ " -s \"(ArffFileStream -f datasets/semi-synth/" + datasets[dataset] + ".arff)\"" 
 									+ " -l \"(moa.classifiers.active.ALUncertainty -l (" + algorithms[alg] + ") -d " + activeLearningStrategies[strategy] + " -b " + budgets[budget] + ")\""
 									+ " -f 500"
 									+ " -d " + resultsPath + algorithmsFilename[alg] + "-" + datasets[dataset] + "-" + activeLearningStrategies[strategy] + "-" + budgets[budget] + ".csv");

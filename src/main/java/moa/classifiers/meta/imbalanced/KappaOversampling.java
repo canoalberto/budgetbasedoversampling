@@ -36,6 +36,7 @@ public class KappaOversampling extends AbstractClassifier implements MultiClassC
     private Classifier classifier;
     private double[] numberInstancesClassPrequential;
     private NearestNeighbor nn;
+	private int generatedInstances;
 	protected WindowKappaClassificationPerformanceEvaluator evaluator;
     
     @Override
@@ -114,6 +115,8 @@ public class KappaOversampling extends AbstractClassifier implements MultiClassC
             Instances syntheticInstances = generateLineInstances(instance, neighbors.get(randomNeighbor), 1);
             
             System.out.println("Generating using neighbor " + neighbors.get(randomNeighbor).hashCode() + " current " + instance.hashCode());
+            
+            generatedInstances += syntheticInstances.numInstances();
 
             for (int j = 0; j < syntheticInstances.numInstances(); j++) {
                 this.classifier.trainOnInstance(syntheticInstances.get(j));
@@ -123,7 +126,9 @@ public class KappaOversampling extends AbstractClassifier implements MultiClassC
 
     @Override
     protected Measurement[] getModelMeasurementsImpl() {
-        return new Measurement[0];
+    	return new Measurement[]{
+    			new Measurement("generated instances", this.generatedInstances)
+    	};
     }
 
     @Override
@@ -134,6 +139,7 @@ public class KappaOversampling extends AbstractClassifier implements MultiClassC
     public boolean isRandomizable() {
         return true;
     }
+    
     
     private Instances generateLineInstances(Instance instance, Instance neighbor, int numGenerations) {
         Instances generatedInstances = new Instances(instance.dataset(), 0);
