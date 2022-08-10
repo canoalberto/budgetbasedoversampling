@@ -3,7 +3,7 @@ package experiments.active;
 import moa.classifiers.active.ALUncertainty;
 import moa.core.InstanceExample;
 import moa.core.TimingUtils;
-import moa.evaluation.MultiClassImbalancedPerformanceEvaluator;
+import moa.evaluation.ALMultiClassImbalancedPerformanceEvaluator;
 import moa.streams.ArffFileStream;
 
 public class Debug {
@@ -15,11 +15,11 @@ public class Debug {
 		
 		ALUncertainty activelearning = new ALUncertainty();
 		
-		//activelearning.baseLearnerOption.setValueViaCLIString("moa.classifiers.trees.HoeffdingAdaptiveTree");
-		activelearning.baseLearnerOption.setValueViaCLIString("moa.classifiers.meta.imbalanced.KappaOversampling -l moa.classifiers.trees.HoeffdingAdaptiveTree");
+		activelearning.baseLearnerOption.setValueViaCLIString("moa.classifiers.trees.HoeffdingAdaptiveTree");
+//		activelearning.baseLearnerOption.setValueViaCLIString("moa.classifiers.meta.imbalanced.KappaOversampling -l moa.classifiers.trees.HoeffdingAdaptiveTree");
 		
 		activelearning.activeLearningStrategyOption.setValueViaCLIString("RandVarUncertainty");
-		activelearning.budgetOption.setValue(1.0);
+		activelearning.budgetOption.setValue(0.1);
 
 		activelearning.prepareForUse();
 		activelearning.resetLearning();
@@ -27,7 +27,7 @@ public class Debug {
 
 		int numberInstances = 0;
 		
-		MultiClassImbalancedPerformanceEvaluator evaluator = new MultiClassImbalancedPerformanceEvaluator();
+		ALMultiClassImbalancedPerformanceEvaluator evaluator = new ALMultiClassImbalancedPerformanceEvaluator();
 
 		long evaluateStartTime = TimingUtils.getNanoCPUTimeOfCurrentThread();
 		
@@ -40,6 +40,8 @@ public class Debug {
 			//System.out.println(instance.getData().classValue() + "\t" + Utils.maxIndex(learner.getVotesForInstance(instance)));
 			
 			activelearning.trainOnInstance(instance);
+			
+        	evaluator.doLabelAcqReport(instance, activelearning.getLastLabelAcqReport());
 
 			numberInstances++;
 		}

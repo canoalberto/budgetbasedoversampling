@@ -118,8 +118,8 @@ public class Semisynth {
 							System.out.println("semi-" + seq + ": ");
 							
 							System.out.println("\tjava " + VMargs + " -javaagent:sizeofag-1.0.4.jar -cp " + jarFile + " "
-									+ "moa.DoTask EvaluateInterleavedTestThenTrain"
-									+ " -e \"(MultiClassImbalancedPerformanceEvaluator -w 500)\""
+									+ "moa.DoTask moa.tasks.meta.ALPrequentialEvaluationTask"
+									+ " -e \"(ALMultiClassImbalancedPerformanceEvaluator -w 500)\""
 									+ " -s \"(ArffFileStream -f datasets/semi-synth/" + datasets[dataset] + ".arff)\"" 
 									+ " -l \"(moa.classifiers.active.ALUncertainty -l (" + algorithms[alg] + ") -d " + activeLearningStrategies[strategy] + " -b " + budgets[budget] + ")\""
 									+ " -f 500"
