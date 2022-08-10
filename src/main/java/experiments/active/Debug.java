@@ -19,7 +19,7 @@ public class Debug {
 //		activelearning.baseLearnerOption.setValueViaCLIString("moa.classifiers.meta.imbalanced.KappaOversampling -l moa.classifiers.trees.HoeffdingAdaptiveTree");
 		
 		activelearning.activeLearningStrategyOption.setValueViaCLIString("RandVarUncertainty");
-		activelearning.budgetOption.setValue(0.1);
+		activelearning.budgetOption.setValue(0.5);
 
 		activelearning.prepareForUse();
 		activelearning.resetLearning();
@@ -40,7 +40,6 @@ public class Debug {
 			//System.out.println(instance.getData().classValue() + "\t" + Utils.maxIndex(learner.getVotesForInstance(instance)));
 			
 			activelearning.trainOnInstance(instance);
-			
         	evaluator.doLabelAcqReport(instance, activelearning.getLastLabelAcqReport());
 
 			numberInstances++;
