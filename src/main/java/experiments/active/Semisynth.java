@@ -117,7 +117,7 @@ public class Semisynth {
 						if(!new File(filename).exists()) {
 							System.out.println("semi-" + seq + ": ");
 							
-							System.out.println("\tsleep 1s && java " + VMargs + " -javaagent:sizeofag-1.0.4.jar -cp " + jarFile + " "
+							System.out.println("\tjava " + VMargs + " -javaagent:sizeofag-1.0.4.jar -cp " + jarFile + " "
 									+ "moa.DoTask EvaluateInterleavedTestThenTrain"
 									+ " -e \"(MultiClassImbalancedPerformanceEvaluator -w 500)\""
 									+ " -s \"(ArffFileStream -f datasets/semi-synth/" + datasets[dataset] + ".arff)\"" 
