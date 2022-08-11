@@ -1,5 +1,7 @@
 package moa.classifiers.meta.imbalanced;
 
+import org.netlib.util.booleanW;
+
 import com.github.javacliparser.FloatOption;
 import com.github.javacliparser.IntOption;
 import com.yahoo.labs.samoa.instances.Instance;
@@ -109,7 +111,7 @@ public class KappaOversampling extends AbstractClassifier implements MultiClassC
             int randomNeighbor = Math.abs(this.classifierRandom.nextInt() % neighbors.numInstances());
 
             while (neighbors.get(randomNeighbor).classValue() != instance.classValue()) {
-                randomNeighbor = Math.abs(this.classifierRandom.nextInt() % neighbors.numInstances());	// TODO: what if there's no neighbor of the intended class? (it could be only "self").
+                randomNeighbor = Math.abs(this.classifierRandom.nextInt() % neighbors.numInstances());
             }
 
             Instances syntheticInstances = generateLineInstances(instance, neighbors.get(randomNeighbor), 1);
@@ -167,6 +169,7 @@ class NearestNeighbor {
 
     private NearestNeighbourSearch nnSearch;
     private Instances windowInstances;
+    private Instances[] classWindows;
     private Instances actualNeighbors;
     private int windowSize;
 
@@ -174,15 +177,33 @@ class NearestNeighbor {
         this.nnSearch = nnSearch;
         this.windowSize = windowSize;
         this.windowInstances = new Instances(instanceTemplate.dataset(), 0);
+        this.classWindows = new Instances[instanceTemplate.numClasses()];
+        
+        for(int i = 0; i < instanceTemplate.numClasses(); i++) {
+            this.classWindows[i]  = new Instances(instanceTemplate.dataset(), 0);
+        }
     }
 
     public void add(Instance instance) {
 
-        this.windowInstances.add(instance);
+        this.windowInstances.addByReference(instance);
         
-        if (this.windowInstances.size() > this.windowSize) {
-            this.windowInstances.delete(0);
+        Instances specificClassWindow = classWindows[(int) instance.classValue()];
+        
+        if (specificClassWindow.size() == this.windowSize) {
+        	
+        	Instance instancetoremove = specificClassWindow.get(0);
+        	specificClassWindow.delete(0);
+        	
+        	for(int i = 0; i < this.windowInstances.size(); i++) {
+        		if(this.windowInstances.get(i) == instancetoremove) {
+        			this.windowInstances.delete(i);
+        			break;
+        		}
+        	}
         }
+        
+        specificClassWindow.addByReference(instance);
     }
 
     public Instances getNearestNeighbors(Instance instance, int k) {

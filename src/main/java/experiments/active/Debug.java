@@ -15,11 +15,11 @@ public class Debug {
 		
 		ALUncertainty activelearning = new ALUncertainty();
 		
-		activelearning.baseLearnerOption.setValueViaCLIString("moa.classifiers.trees.HoeffdingAdaptiveTree");
-//		activelearning.baseLearnerOption.setValueViaCLIString("moa.classifiers.meta.imbalanced.KappaOversampling -l moa.classifiers.trees.HoeffdingAdaptiveTree");
+//		activelearning.baseLearnerOption.setValueViaCLIString("moa.classifiers.trees.HoeffdingAdaptiveTree");
+		activelearning.baseLearnerOption.setValueViaCLIString("moa.classifiers.meta.imbalanced.KappaOversampling -l moa.classifiers.trees.HoeffdingAdaptiveTree");
 		
 		activelearning.activeLearningStrategyOption.setValueViaCLIString("RandVarUncertainty");
-		activelearning.budgetOption.setValue(0.5);
+		activelearning.budgetOption.setValue(1.0);
 
 		activelearning.prepareForUse();
 		activelearning.resetLearning();
