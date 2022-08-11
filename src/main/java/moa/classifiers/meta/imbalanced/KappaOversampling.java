@@ -1,11 +1,10 @@
 package moa.classifiers.meta.imbalanced;
 
-import org.netlib.util.booleanW;
-
 import com.github.javacliparser.FloatOption;
 import com.github.javacliparser.IntOption;
 import com.yahoo.labs.samoa.instances.Instance;
 import com.yahoo.labs.samoa.instances.Instances;
+import com.yahoo.labs.samoa.instances.InstancesHeader;
 
 import moa.capabilities.CapabilitiesHandler;
 import moa.classifiers.AbstractClassifier;
@@ -88,11 +87,11 @@ public class KappaOversampling extends AbstractClassifier implements MultiClassC
         int numberNeighborsSameClass = numberInstancesClassNeighborhood[(int) instance.classValue()]; 
 
         if (numberNeighborsSameClass == 0) { // rare
-        	System.out.println("Instance type is rare");
+//        	System.out.println("Instance type is rare");
         } else if (numberNeighborsSameClass < this.numberOfNeighborsOption.getValue() * this.safeCuttingOption.getValue()) { // borderline
-        	System.out.println("Instance type is overlapping");
+//        	System.out.println("Instance type is overlapping");
         } else { // safe example
-        	System.out.println("Instance type is safe");
+//        	System.out.println("Instance type is safe");
         	oversampleandtrain(instance, neighbors, imbalanceRatio, kappa);
         }
     }
@@ -101,10 +100,10 @@ public class KappaOversampling extends AbstractClassifier implements MultiClassC
     	
         int k = (int) Math.ceil(this.maxInstancesOption.getValue()*(1-imbalanceRatio)*(1-kappa));
         
-        if (k > 0)
-        	System.out.println("Oversampling with " + k + " artificial instances. Having imbalanceRatio " + imbalanceRatio + " and kappa " + kappa);
-        else
-        	System.out.println("NOT oversampling. Having imbalanceRatio " + imbalanceRatio + " and kappa " + kappa);
+//        if (k > 0)
+//        	System.out.println("Oversampling with " + k + " artificial instances. Having imbalanceRatio " + imbalanceRatio + " and kappa " + kappa);
+//        else
+//        	System.out.println("NOT oversampling. Having imbalanceRatio " + imbalanceRatio + " and kappa " + kappa);
 
         for (int i = 0; i < k; i++) {
 
@@ -116,7 +115,7 @@ public class KappaOversampling extends AbstractClassifier implements MultiClassC
 
             Instances syntheticInstances = generateLineInstances(instance, neighbors.get(randomNeighbor), 1);
             
-            System.out.println("Generating using neighbor " + neighbors.get(randomNeighbor).hashCode() + " current " + instance.hashCode());
+//            System.out.println("Generating using neighbor " + neighbors.get(randomNeighbor).hashCode() + " current " + instance.hashCode());
             
             generatedInstances += syntheticInstances.numInstances();
 
@@ -163,6 +162,12 @@ public class KappaOversampling extends AbstractClassifier implements MultiClassC
         
         return generatedInstances;
     }
+    
+    @Override
+	public void setModelContext(InstancesHeader ih) {
+		super.setModelContext(ih);
+		classifier.setModelContext(ih);
+	}
 }
 
 class NearestNeighbor {
