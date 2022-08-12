@@ -1,4 +1,4 @@
-package experiments.active.uncertainty;
+package experiments.active.uncertainty.fixedoversampling;
 
 import java.io.File;
 
@@ -6,32 +6,26 @@ import org.apache.commons.lang3.SystemUtils;
 
 import utils.Utils;
 
-public class Real {
+public class Semisynth {
 
 	public static void main(String[] args) throws Exception {
 		
 		String absolutePath = SystemUtils.IS_OS_UNIX ? "/home/acano/Downloads/activelearning/" : "D:/activelearning/";
-		String resultsPath = "results/uncertainty/real/";
+		String resultsPath = "results/uncertainty-fixedoversampling/semi-synth/";
+		int numberOversampledInstances = 5;
 
 		String[] datasets = new String[] {
-				"activity",
-				"connect-4",
-				"CovPokElec",
-				"covtype",
-				"crimes",
-				"fars",
-				"gas",
-				"hypothyroid",
-				"kddcup",
-				"kr-vs-k",
-				"lymph",
-				"olympic",
-				"poker",
-				"sensor",
-				"shuttle",
-				"tags",
-				"thyroid",
-				"zoo",
+				"CRIMES-D1",
+				"DJ30-D1",
+				"GAS-D1",
+				"OLYMPIC-D1",
+				"POKER-D1",
+				"SENSOR-D1",
+				"TAGS-D1",
+				"ACTIVITY_RAW-D1",
+				"ACTIVITY-D1",
+				"CONNECT4-D1",
+				"COVERTYPE-D1",
 		};
 		
 		String[] algorithms = new String[] {
@@ -64,7 +58,7 @@ public class Real {
 		
 					for(int alg = 0; alg < algorithms.length; alg++)
 					{
-						String filename = absolutePath+resultsPath + algorithmsFilename[alg] + "-" + datasets[dataset] + "-" + activeLearningStrategies[strategy] + "-" + budgets[budget] + ".csv";
+						String filename = absolutePath+resultsPath + algorithmsFilename[alg] + "-" + datasets[dataset] + "-" + activeLearningStrategies[strategy] + "-" + budgets[budget] + "-" + numberOversampledInstances + ".csv";
 		
 						if(new File(filename).exists())
 						{
@@ -77,7 +71,7 @@ public class Real {
 					{
 						if(lines[alg] != maxlines)
 						{
-							String filename = absolutePath+resultsPath + algorithmsFilename[alg] + "-" + datasets[dataset] + "-" + activeLearningStrategies[strategy] + "-" + budgets[budget] + ".csv";
+							String filename = absolutePath+resultsPath + algorithmsFilename[alg] + "-" + datasets[dataset] + "-" + activeLearningStrategies[strategy] + "-" + budgets[budget] + "-" + numberOversampledInstances + ".csv";
 							System.out.println("Incomplete file " + lines[alg] + "\t" + maxlines + "\t" + filename);
 							//new File(path + filename).delete();
 						}
@@ -97,10 +91,10 @@ public class Real {
 			for(int alg = 0; alg < algorithms.length; alg++) {
 				for(int strategy = 0; strategy < activeLearningStrategies.length; strategy++) {
 					for(int budget = 0; budget < budgets.length; budget++) {
-						String filename = absolutePath+resultsPath + algorithmsFilename[alg] + "-" + datasets[dataset] + "-" + activeLearningStrategies[strategy] + "-" + budgets[budget] + ".csv";
+						String filename = absolutePath+resultsPath + algorithmsFilename[alg] + "-" + datasets[dataset] + "-" + activeLearningStrategies[strategy] + "-" + budgets[budget] + "-" + numberOversampledInstances + ".csv";
 
 						if(!new File(filename).exists()) {
-							System.out.print("real-" + seq + " ");
+							System.out.print("semi-" + seq + " ");
 						}
 						
 						seq++;
@@ -116,18 +110,18 @@ public class Real {
 						String VMargs = "-Xms8g -Xmx1024g";
 						String jarFile = "kappaoversampling-1.0-jar-with-dependencies.jar";
 		
-						String filename = absolutePath+resultsPath + algorithmsFilename[alg] + "-" + datasets[dataset] + "-" + activeLearningStrategies[strategy] + "-" + budgets[budget] + ".csv";
+						String filename = absolutePath+resultsPath + algorithmsFilename[alg] + "-" + datasets[dataset] + "-" + activeLearningStrategies[strategy] + "-" + budgets[budget] + "-" + numberOversampledInstances + ".csv";
 	
 						if(!new File(filename).exists()) {
-							System.out.println("real-" + seq + ": ");
+							System.out.println("semi-" + seq + ": ");
 							
 							System.out.println("\tjava " + VMargs + " -javaagent:sizeofag-1.0.4.jar -cp " + jarFile + " "
 									+ "moa.DoTask moa.tasks.meta.ALPrequentialEvaluationTask"
 									+ " -e \"(ALMultiClassImbalancedPerformanceEvaluator -w 500)\""
-									+ " -s \"(ArffFileStream -f datasets/real/" + datasets[dataset] + ".arff)\"" 
-									+ " -l \"(moa.classifiers.active.ALUncertainty -l (" + algorithms[alg] + ") -d " + activeLearningStrategies[strategy] + " -b " + budgets[budget] + ")\""
+									+ " -s \"(ArffFileStream -f datasets/semi-synth/" + datasets[dataset] + ".arff)\"" 
+									+ " -l \"(moa.classifiers.active.ALUncertainty -l (moa.classifiers.meta.imbalanced.FixedOversampling -i " + numberOversampledInstances + " -l " + algorithms[alg] + ") -d " + activeLearningStrategies[strategy] + " -b " + budgets[budget] + ")\""
 									+ " -f 500"
-									+ " -d " + resultsPath + algorithmsFilename[alg] + "-" + datasets[dataset] + "-" + activeLearningStrategies[strategy] + "-" + budgets[budget] + ".csv");
+									+ " -d " + resultsPath + algorithmsFilename[alg] + "-" + datasets[dataset] + "-" + activeLearningStrategies[strategy] + "-" + budgets[budget] + "-" + numberOversampledInstances + ".csv");
 						}
 						
 						seq++;
@@ -144,7 +138,7 @@ public class Real {
 				String[] datasetsFilename = datasets.clone();
 				
 				for(int i = 0; i < datasetsFilename.length; i++)
-					datasetsFilename[i] = datasetsFilename[i] + "-" + activeLearningStrategies[strategy] + "-" + budgets[budget];
+					datasetsFilename[i] = datasetsFilename[i] + "-" + activeLearningStrategies[strategy] + "-" + budgets[budget] + "-" + numberOversampledInstances;
 				
 //				Utils.metric("Kappa", "averaged", absolutePath+resultsPath, algorithmsFilename, datasetsFilename);
 				Utils.metric("PMAUC", "averaged", absolutePath+resultsPath, algorithmsFilename, datasetsFilename);

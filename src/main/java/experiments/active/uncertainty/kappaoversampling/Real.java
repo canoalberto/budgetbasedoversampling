@@ -1,4 +1,4 @@
-package experiments.active.uncertainty.oversampling;
+package experiments.active.uncertainty.kappaoversampling;
 
 import java.io.File;
 
@@ -11,7 +11,7 @@ public class Real {
 	public static void main(String[] args) throws Exception {
 		
 		String absolutePath = SystemUtils.IS_OS_UNIX ? "/home/acano/Downloads/activelearning/" : "D:/activelearning/";
-		String resultsPath = "results/uncertainty-oversampling/real/";
+		String resultsPath = "results/uncertainty-kappaoversampling/real/";
 
 		String[] datasets = new String[] {
 				"activity",
@@ -146,15 +146,15 @@ public class Real {
 				for(int i = 0; i < datasetsFilename.length; i++)
 					datasetsFilename[i] = datasetsFilename[i] + "-" + activeLearningStrategies[strategy] + "-" + budgets[budget];
 				
-				Utils.metric("Kappa", "averaged", absolutePath+resultsPath, algorithmsFilename, datasetsFilename);
+//				Utils.metric("Kappa", "averaged", absolutePath+resultsPath, algorithmsFilename, datasetsFilename);
 				Utils.metric("PMAUC", "averaged", absolutePath+resultsPath, algorithmsFilename, datasetsFilename);
-				Utils.metric("WMAUC", "averaged", absolutePath+resultsPath, algorithmsFilename, datasetsFilename);
-				Utils.metric("EWMAUC", "averaged", absolutePath+resultsPath, algorithmsFilename, datasetsFilename);
-				Utils.metric("Accuracy", "averaged", absolutePath+resultsPath, algorithmsFilename, datasetsFilename);
-				Utils.metric("G-Mean", "averaged", absolutePath+resultsPath, algorithmsFilename, datasetsFilename);
+//				Utils.metric("WMAUC", "averaged", absolutePath+resultsPath, algorithmsFilename, datasetsFilename);
+//				Utils.metric("EWMAUC", "averaged", absolutePath+resultsPath, algorithmsFilename, datasetsFilename);
+//				Utils.metric("Accuracy", "averaged", absolutePath+resultsPath, algorithmsFilename, datasetsFilename);
+//				Utils.metric("G-Mean", "averaged", absolutePath+resultsPath, algorithmsFilename, datasetsFilename);
 		
-				Utils.metric("evaluation time (cpu seconds)", "last", absolutePath+resultsPath, algorithmsFilename, datasetsFilename);
-				Utils.metric("model cost (RAM-Hours)", "averaged", absolutePath+resultsPath, algorithmsFilename, datasetsFilename);
+//				Utils.metric("evaluation time (cpu seconds)", "last", absolutePath+resultsPath, algorithmsFilename, datasetsFilename);
+//				Utils.metric("model cost (RAM-Hours)", "averaged", absolutePath+resultsPath, algorithmsFilename, datasetsFilename);
 			}
 		}
 	}

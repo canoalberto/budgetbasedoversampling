@@ -139,15 +139,15 @@ public class Semisynth {
 				for(int i = 0; i < datasetsFilename.length; i++)
 					datasetsFilename[i] = datasetsFilename[i] + "-" + activeLearningStrategies[strategy] + "-" + budgets[budget];
 				
-				Utils.metric("Kappa", "averaged", absolutePath+resultsPath, algorithmsFilename, datasetsFilename);
+//				Utils.metric("Kappa", "averaged", absolutePath+resultsPath, algorithmsFilename, datasetsFilename);
 				Utils.metric("PMAUC", "averaged", absolutePath+resultsPath, algorithmsFilename, datasetsFilename);
-				Utils.metric("WMAUC", "averaged", absolutePath+resultsPath, algorithmsFilename, datasetsFilename);
-				Utils.metric("EWMAUC", "averaged", absolutePath+resultsPath, algorithmsFilename, datasetsFilename);
-				Utils.metric("Accuracy", "averaged", absolutePath+resultsPath, algorithmsFilename, datasetsFilename);
-				Utils.metric("G-Mean", "averaged", absolutePath+resultsPath, algorithmsFilename, datasetsFilename);
+//				Utils.metric("WMAUC", "averaged", absolutePath+resultsPath, algorithmsFilename, datasetsFilename);
+//				Utils.metric("EWMAUC", "averaged", absolutePath+resultsPath, algorithmsFilename, datasetsFilename);
+//				Utils.metric("Accuracy", "averaged", absolutePath+resultsPath, algorithmsFilename, datasetsFilename);
+//				Utils.metric("G-Mean", "averaged", absolutePath+resultsPath, algorithmsFilename, datasetsFilename);
 		
-				Utils.metric("evaluation time (cpu seconds)", "last", absolutePath+resultsPath, algorithmsFilename, datasetsFilename);
-				Utils.metric("model cost (RAM-Hours)", "averaged", absolutePath+resultsPath, algorithmsFilename, datasetsFilename);
+//				Utils.metric("evaluation time (cpu seconds)", "last", absolutePath+resultsPath, algorithmsFilename, datasetsFilename);
+//				Utils.metric("model cost (RAM-Hours)", "averaged", absolutePath+resultsPath, algorithmsFilename, datasetsFilename);
 			}
 		}
 	}

@@ -18,7 +18,7 @@ import moa.core.Utils;
 import moa.evaluation.WindowKappaClassificationPerformanceEvaluator;
 import moa.options.ClassOption;
 
-public class KappaOversampling extends AbstractClassifier implements MultiClassClassifier, CapabilitiesHandler {
+public class FixedOversampling extends AbstractClassifier implements MultiClassClassifier, CapabilitiesHandler {
 
     private static final long serialVersionUID = 1L;
 
@@ -28,7 +28,7 @@ public class KappaOversampling extends AbstractClassifier implements MultiClassC
     
     public IntOption numberOfNeighborsOption = new IntOption("neighborSize", 'k', "Number of Neighbors", 10, 1, Integer.MAX_VALUE);
     
-    public IntOption maxInstancesOption = new IntOption("maxInstances", 'i', "Max number of instances to be created", 50, 1, Integer.MAX_VALUE);
+    public IntOption numberOversampledInstancesOption = new IntOption("numberOversampledInstances", 'i', "Number of instances to be created", 5, 1, Integer.MAX_VALUE);
     
     public FloatOption safeCuttingOption = new FloatOption("safeCutting", 's', "Number of neighbors to define an instance as safe", 0.5, 0, 1);
     
@@ -98,7 +98,7 @@ public class KappaOversampling extends AbstractClassifier implements MultiClassC
     
     private void oversampleandtrain(Instance instance, Instances neighbors, double imbalanceRatio, double kappa) {
     	
-        int k = (int) Math.ceil(this.maxInstancesOption.getValue()*(1-imbalanceRatio)*(1-kappa));
+        int k = this.numberOversampledInstancesOption.getValue();
         
 //        if (k > 0)
 //        	System.out.println("Oversampling with " + k + " artificial instances. Having imbalanceRatio " + imbalanceRatio + " and kappa " + kappa);
