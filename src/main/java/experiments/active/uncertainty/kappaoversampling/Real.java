@@ -122,6 +122,7 @@ public class Real {
 							System.out.println("real-" + seq + ": ");
 
 							if (activeLearningStrategies[strategy].equals("Random")){
+								resultsPath = "results/random-kappaoversampling/semi-synth/";
 								System.out.println("\tjava " + VMargs + " -javaagent:sizeofag-1.0.4.jar -cp " + jarFile + " "
 										+ "moa.DoTask moa.tasks.meta.ALPrequentialEvaluationTask"
 										+ " -e \"(ALMultiClassImbalancedPerformanceEvaluator -w 500)\""
