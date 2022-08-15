@@ -18,6 +18,7 @@ import moa.core.Utils;
 import moa.evaluation.WindowKappaClassificationPerformanceEvaluator;
 import moa.options.ClassOption;
 
+
 public class KappaOversampling extends AbstractClassifier implements MultiClassClassifier, CapabilitiesHandler {
 
     private static final long serialVersionUID = 1L;

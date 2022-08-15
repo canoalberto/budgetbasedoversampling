@@ -51,7 +51,7 @@ public class Real {
 			algorithmsFilename[alg] = algorithms[alg].replaceAll(" ", "").replaceAll("moa.classifiers.meta.imbalanced.", "").replaceAll("moa.classifiers.meta.", "").replaceAll("moa.classifiers.trees.", "").replaceAll("moa.classifiers.ann.meta.", "").replaceAll("moa.classifiers.active.", "").replaceAll("[()]", "");
 
 		//String[] activeLearningStrategies = new String [] {"FixedUncertainty", "VarUncertainty", "RandVarUncertainty", "SelSampling"};
-		String[] activeLearningStrategies = new String [] {"RandVarUncertainty"};
+		String[] activeLearningStrategies = new String [] {"Random"};
 		double[] budgets = new double[] {1, 0.5, 0.2, 0.1, 0.05, 0.01, 0.005, 0.001};
 		
 		// Check partially-complete experiments (if fails before reaching end)
@@ -120,14 +120,27 @@ public class Real {
 	
 						if(!new File(filename).exists()) {
 							System.out.println("real-" + seq + ": ");
-							
-							System.out.println("\tjava " + VMargs + " -javaagent:sizeofag-1.0.4.jar -cp " + jarFile + " "
-									+ "moa.DoTask moa.tasks.meta.ALPrequentialEvaluationTask"
-									+ " -e \"(ALMultiClassImbalancedPerformanceEvaluator -w 500)\""
-									+ " -s \"(ArffFileStream -f datasets/real/" + datasets[dataset] + ".arff)\"" 
-									+ " -l \"(moa.classifiers.active.ALUncertainty -l (moa.classifiers.meta.imbalanced.KappaOversampling -l " + algorithms[alg] + ") -d " + activeLearningStrategies[strategy] + " -b " + budgets[budget] + ")\""
-									+ " -f 500"
-									+ " -d " + resultsPath + algorithmsFilename[alg] + "-" + datasets[dataset] + "-" + activeLearningStrategies[strategy] + "-" + budgets[budget] + ".csv");
+
+							if (activeLearningStrategies[strategy].equals("Random")){
+								System.out.println("\tjava " + VMargs + " -javaagent:sizeofag-1.0.4.jar -cp " + jarFile + " "
+										+ "moa.DoTask moa.tasks.meta.ALPrequentialEvaluationTask"
+										+ " -e \"(ALMultiClassImbalancedPerformanceEvaluator -w 500)\""
+										+ " -s \"(ArffFileStream -f datasets/real/" + datasets[dataset] + ".arff)\""
+										+ " -l \"(moa.classifiers.active.ALRandom -l (moa.classifiers.meta.imbalanced.KappaOversampling -l " + algorithms[alg] + ") -b (moa.classifiers.active.budget.FixedBM -b " + budgets[budget] + "))\""
+										+ " -f 500"
+										+ " -d " + resultsPath + algorithmsFilename[alg] + "-" + datasets[dataset] + "-" + activeLearningStrategies[strategy] + "-" + budgets[budget] + ".csv");
+
+
+							}else {
+
+								System.out.println("\tjava " + VMargs + " -javaagent:sizeofag-1.0.4.jar -cp " + jarFile + " "
+										+ "moa.DoTask moa.tasks.meta.ALPrequentialEvaluationTask"
+										+ " -e \"(ALMultiClassImbalancedPerformanceEvaluator -w 500)\""
+										+ " -s \"(ArffFileStream -f datasets/real/" + datasets[dataset] + ".arff)\""
+										+ " -l \"(moa.classifiers.active.ALUncertainty -l (moa.classifiers.meta.imbalanced.KappaOversampling -l " + algorithms[alg] + ") -d " + activeLearningStrategies[strategy] + " -b " + budgets[budget] + ")\""
+										+ " -f 500"
+										+ " -d " + resultsPath + algorithmsFilename[alg] + "-" + datasets[dataset] + "-" + activeLearningStrategies[strategy] + "-" + budgets[budget] + ".csv");
+							}
 						}
 						
 						seq++;
@@ -136,7 +149,7 @@ public class Real {
 			}
 		}
 
-		// Show metrics for results
+		/*// Show metrics for results
 		System.out.println("===== Results =====");
 		for(int strategy = 0; strategy < activeLearningStrategies.length; strategy++) {
 			for(int budget = 0; budget < budgets.length; budget++) {
@@ -156,6 +169,6 @@ public class Real {
 //				Utils.metric("evaluation time (cpu seconds)", "last", absolutePath+resultsPath, algorithmsFilename, datasetsFilename);
 //				Utils.metric("model cost (RAM-Hours)", "averaged", absolutePath+resultsPath, algorithmsFilename, datasetsFilename);
 			}
-		}
+		}*/
 	}
 }

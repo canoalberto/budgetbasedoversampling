@@ -120,6 +120,8 @@ public class Real {
 	
 						if(!new File(filename).exists()) {
 							System.out.println("real-" + seq + ": ");
+
+
 							
 							System.out.println("\tjava " + VMargs + " -javaagent:sizeofag-1.0.4.jar -cp " + jarFile + " "
 									+ "moa.DoTask moa.tasks.meta.ALPrequentialEvaluationTask"
