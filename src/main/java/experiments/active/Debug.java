@@ -5,21 +5,30 @@ import moa.core.InstanceExample;
 import moa.core.TimingUtils;
 import moa.evaluation.ALMultiClassImbalancedPerformanceEvaluator;
 import moa.streams.ArffFileStream;
+import moa.classifiers.active.budget.FixedBM;
+import moa.classifiers.active.ALRandom;
+
+import java.util.ArrayList;
 
 public class Debug {
 
 	public static void main(String[] args) throws Exception
 	{
-		ArffFileStream stream = new ArffFileStream("datasets/multi-class/shuttle.arff", -1);
+		ArffFileStream stream = new ArffFileStream("datasets/semi-synth/CONNECT4-D1.arff", -1);
 		stream.prepareForUse();
 		
-		ALUncertainty activelearning = new ALUncertainty();
+		//ALUncertainty activelearning = new ALUncertainty();
+
+		ALRandom activelearning = new ALRandom();
+
+		activelearning.budgetManagerOption.setValueViaCLIString("moa.classifiers.active.budget.FixedBM -b 0.1");
 		
 //		activelearning.baseLearnerOption.setValueViaCLIString("moa.classifiers.trees.HoeffdingAdaptiveTree");
-		activelearning.baseLearnerOption.setValueViaCLIString("moa.classifiers.meta.imbalanced.KappaOversampling -l moa.classifiers.trees.HoeffdingAdaptiveTree");
+		activelearning.baseLearnerOption.setValueViaCLIString("moa.classifiers.meta.imbalanced.KappaImbOversampling " +
+				"-l moa.classifiers.meta.AdaptiveRandomForest -b 0.1 -f 1");
 		
-		activelearning.activeLearningStrategyOption.setValueViaCLIString("RandVarUncertainty");
-		activelearning.budgetOption.setValue(1.0);
+		//activelearning.activeLearningStrategyOption.setValueViaCLIString("RandVarUncertainty");
+		//activelearning.budgetOption.setValue(0.01);
 
 		activelearning.prepareForUse();
 		activelearning.resetLearning();
@@ -28,9 +37,14 @@ public class Debug {
 		int numberInstances = 0;
 		
 		ALMultiClassImbalancedPerformanceEvaluator evaluator = new ALMultiClassImbalancedPerformanceEvaluator();
+		int eval_size = evaluator.widthOption.getValue();
 
 		long evaluateStartTime = TimingUtils.getNanoCPUTimeOfCurrentThread();
-		
+
+		double avg_pmauc = 0;
+		double avg_kappa = 0;
+		int n_windows = 0;
+
 		while (stream.hasMoreInstances())
 		{
 			InstanceExample instance = stream.nextInstance();
@@ -42,8 +56,24 @@ public class Debug {
 			activelearning.trainOnInstance(instance);
         	evaluator.doLabelAcqReport(instance, activelearning.getLastLabelAcqReport());
 
+
+			if (numberInstances%eval_size == 0){
+				//System.out.println(evaluator.getPerformanceMeasurements()[1].getName() + "\t" + evaluator
+				// .getPerformanceMeasurements()[1].getValue());
+
+				avg_pmauc = avg_pmauc + evaluator.getPerformanceMeasurements()[1].getValue();
+				if (evaluator.getPerformanceMeasurements()[5].getValue()>0) {
+					avg_kappa = avg_kappa + evaluator.getPerformanceMeasurements()[5].getValue();
+				}
+
+				n_windows++;
+			}
+
 			numberInstances++;
 		}
+
+		System.out.println("AVG PMAUC \t" + avg_pmauc/n_windows);
+		System.out.println("AVG KAPPA \t" + avg_kappa/n_windows);
 
 		double time = TimingUtils.nanoTimeToSeconds(TimingUtils.getNanoCPUTimeOfCurrentThread()- evaluateStartTime);
 
