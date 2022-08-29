@@ -14,7 +14,7 @@ public class Debug {
 
 	public static void main(String[] args) throws Exception
 	{
-		ArffFileStream stream = new ArffFileStream("datasets/semi-synth/CONNECT4-D1.arff", -1);
+		ArffFileStream stream = new ArffFileStream("datasets/semi-synth/ACTIVITY-D1.arff", -1);
 		stream.prepareForUse();
 		
 		//ALUncertainty activelearning = new ALUncertainty();
@@ -24,8 +24,9 @@ public class Debug {
 		activelearning.budgetManagerOption.setValueViaCLIString("moa.classifiers.active.budget.FixedBM -b 0.1");
 		
 //		activelearning.baseLearnerOption.setValueViaCLIString("moa.classifiers.trees.HoeffdingAdaptiveTree");
-		activelearning.baseLearnerOption.setValueViaCLIString("moa.classifiers.meta.imbalanced.KappaImbOversampling " +
-				"-l moa.classifiers.meta.AdaptiveRandomForest -b 0.1 -f 1");
+		activelearning.baseLearnerOption.setValueViaCLIString("moa.classifiers.meta.imbalanced" +
+				".KappaImbOversampling " +
+				"-l moa.classifiers.meta.AdaptiveRandomForest -b 0.1 -w 100 -f 1");
 		
 		//activelearning.activeLearningStrategyOption.setValueViaCLIString("RandVarUncertainty");
 		//activelearning.budgetOption.setValue(0.01);
