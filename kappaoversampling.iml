@@ -7,7 +7,7 @@
       <sourceFolder url="file://$MODULE_DIR$/src/main/java" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>
-    <orderEntry type="jdk" jdkName="JavaSE-11" jdkType="JavaSDK" />
+    <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Maven: nz.ac.waikato.cms.moa:moa:2021.07.0" level="project" />
     <orderEntry type="library" name="Maven: nz.ac.waikato.cms.weka:weka-dev:3.9.2" level="project" />
