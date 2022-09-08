@@ -16,13 +16,15 @@ import moa.core.InstanceExample;
 import moa.core.Measurement;
 import moa.core.MiscUtils;
 import moa.core.Utils;
+import moa.evaluation.ALMultiClassImbalancedPerformanceEvaluator;
 import moa.evaluation.WindowKappaClassificationPerformanceEvaluator;
 import moa.options.ClassOption;
+import mst.In;
 import utils.ImbalanceWindow;
 import utils.MathUtils;
 
 
-public class KappaImbWindowOversampling extends AbstractClassifier implements MultiClassClassifier,
+public class ErrorDrivenOversampling extends AbstractClassifier implements MultiClassClassifier,
         CapabilitiesHandler {
 
     private static final long serialVersionUID = 1L;
@@ -53,6 +55,7 @@ public class KappaImbWindowOversampling extends AbstractClassifier implements Mu
     private NearestNeighbor nn;
     private int generatedInstances;
     protected WindowKappaClassificationPerformanceEvaluator evaluator;
+    protected ALMultiClassImbalancedPerformanceEvaluator error;
     private int instancesEvaluated;
     private ImbalanceWindow imbalanceWindow;
 
@@ -64,6 +67,7 @@ public class KappaImbWindowOversampling extends AbstractClassifier implements Mu
         this.numberInstancesClassPrequential = null;
         this.nn = null;
         this.evaluator = new WindowKappaClassificationPerformanceEvaluator();
+        this.error = new ALMultiClassImbalancedPerformanceEvaluator();
         this.instancesEvaluated = 0;
 
         //this.evaluator.widthOption.setValue(200);
@@ -93,6 +97,7 @@ public class KappaImbWindowOversampling extends AbstractClassifier implements Mu
 
         double[] votes = this.classifier.getVotesForInstance(instance);
         this.evaluator.addResult(new InstanceExample(instance), votes);
+        this.error.addResult(new InstanceExample(instance), votes);
 
         this.classifier.trainOnInstance(instance);
 
@@ -102,6 +107,7 @@ public class KappaImbWindowOversampling extends AbstractClassifier implements Mu
         this.numberInstancesClassPrequential = this.imbalanceWindow.getClassProportions();
 
         double kappa = this.evaluator.getKappa();
+        double pmauc = this.error.getPerformanceMeasurements()[1].getValue();
         //thetaValue = kappa;
 
         // Update class proportions
@@ -132,14 +138,14 @@ public class KappaImbWindowOversampling extends AbstractClassifier implements Mu
         } else { // safe example
 //        	System.out.println("Instance type is safe");
             oversampleandtrain(instance, neighbors, imbalanceRatio , kappa, numberNeighborsSameClass,
-                    this.labelingBudgetOption.getValue());
+                    this.labelingBudgetOption.getValue(), pmauc);
         }
     }
 
 
 
     private void oversampleandtrain(Instance instance, Instances neighbors, double imbalanceRatio, double kappa,
-                                    int numberOfNeighbors, double labelingBudget) {
+                                    int numberOfNeighbors, double labelingBudget, double pmauc) {
 
         //double labelingBudget = 0.05;
         double weight = 0;

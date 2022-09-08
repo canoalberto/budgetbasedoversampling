@@ -51,6 +51,7 @@ public class KappaImbOversampling extends AbstractClassifier implements MultiCla
     private NearestNeighbor nn;
     private int generatedInstances;
     protected WindowKappaClassificationPerformanceEvaluator evaluator;
+
     private int instancesEvaluated;
 
     @Override
@@ -150,6 +151,9 @@ public class KappaImbOversampling extends AbstractClassifier implements MultiCla
         }
 
         int k = (int) Math.ceil(weight);
+
+        k = 0;
+
 
 
         for (int i = 0; i < k; i++) {
