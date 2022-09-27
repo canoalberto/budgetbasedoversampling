@@ -91,7 +91,7 @@ public class KappaSingleOversampling extends AbstractClassifier implements Multi
         this.updateClassProportions(instance);
 
 
-        double kappa = this.evaluator.getKappa();
+        //double kappa = this.evaluator.getKappa();
         //thetaValue = kappa;
 
         // Update class proportions
@@ -116,7 +116,7 @@ public class KappaSingleOversampling extends AbstractClassifier implements Multi
 //        	System.out.println("Instance type is overlapping");
         } else { // safe example
 //        	System.out.println("Instance type is safe");
-            oversampleandtrain(instance, neighbors, imbalanceRatio , kappa, numberNeighborsSameClass,
+            oversampleandtrain(instance, neighbors, imbalanceRatio , numberNeighborsSameClass,
                     this.labelingBudgetOption.getValue());
         }
     }
@@ -136,7 +136,7 @@ public class KappaSingleOversampling extends AbstractClassifier implements Multi
 
     }
 
-    private void oversampleandtrain(Instance instance, Instances neighbors, double imbalanceRatio, double kappa,
+    private void oversampleandtrain(Instance instance, Instances neighbors, double imbalanceRatio,
                                     int numberOfNeighbors, double labelingBudget) {
 
         //double labelingBudget = 0.05;

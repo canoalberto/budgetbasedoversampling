@@ -17,19 +17,19 @@ public class Debug {
 		ArffFileStream stream = new ArffFileStream("datasets/semi-synth/DJ30-D1.arff", -1);
 		stream.prepareForUse();
 		
-		ALUncertainty activelearning = new ALUncertainty();
+		//ALUncertainty activelearning = new ALUncertainty();
 
-		//ALRandom activelearning = new ALRandom();
+		ALRandom activelearning = new ALRandom();
 
-		//activelearning.budgetManagerOption.setValueViaCLIString("moa.classifiers.active.budget.FixedBM -b 0.2");
+		activelearning.budgetManagerOption.setValueViaCLIString("moa.classifiers.active.budget.FixedBM -b 0.2");
 		
-//		activelearning.baseLearnerOption.setValueViaCLIString("moa.classifiers.trees.HoeffdingAdaptiveTree");
-		activelearning.baseLearnerOption.setValueViaCLIString("moa.classifiers.meta.imbalanced" +
-				".KappaImbOversampling " +
-				"-l moa.classifiers.trees.HoeffdingAdaptiveTree -b 0.2 -w 200 -f 1");
+		activelearning.baseLearnerOption.setValueViaCLIString("moa.classifiers.meta.imbalanced.OSAMP");
+		//activelearning.baseLearnerOption.setValueViaCLIString("moa.classifiers.meta.imbalanced" +
+		//		".KappaImbOversampling " +
+		//		"-l moa.classifiers.meta.imbalanced.OSAMP -b 0.2 -w 200 -f 1");
 		
-		activelearning.activeLearningStrategyOption.setValueViaCLIString("RandVarUncertainty");
-		activelearning.budgetOption.setValue(0.2);
+		//activelearning.activeLearningStrategyOption.setValueViaCLIString("RandVarUncertainty");
+		//activelearning.budgetOption.setValue(0.2);
 
 		activelearning.prepareForUse();
 		activelearning.resetLearning();
