@@ -20,7 +20,7 @@ import moa.options.ClassOption;
 import utils.MathUtils;
 
 
-public class KappaSingleOversampling extends AbstractClassifier implements MultiClassClassifier, CapabilitiesHandler {
+public class BudgetSingleOversampling extends AbstractClassifier implements MultiClassClassifier, CapabilitiesHandler {
 
     private static final long serialVersionUID = 1L;
 
@@ -31,8 +31,6 @@ public class KappaSingleOversampling extends AbstractClassifier implements Multi
     public IntOption numberOfNeighborsOption = new IntOption("neighborSize", 'k', "Number of Neighbors", 10, 1,
             Integer.MAX_VALUE);
 
-    public IntOption maxInstancesOption = new IntOption("maxInstances", 'i', "Max number of instances to be created",
-            50, 1, Integer.MAX_VALUE);
 
     public FloatOption imbalanceWeightOption = new FloatOption("imbalanceWeight", 'f', "Weight to imbalance ratio",
             0, 0, 1);
@@ -48,9 +46,10 @@ public class KappaSingleOversampling extends AbstractClassifier implements Multi
     private Classifier classifier;
     private double[] numberInstancesClassPrequential;
     private NearestNeighbor nn;
-    private int generatedInstances;
+
     protected WindowKappaClassificationPerformanceEvaluator evaluator;
     private int instancesEvaluated;
+    private int generatedInstances;
 
     @Override
     public void resetLearningImpl() {
@@ -61,7 +60,6 @@ public class KappaSingleOversampling extends AbstractClassifier implements Multi
         this.nn = null;
         this.evaluator = new WindowKappaClassificationPerformanceEvaluator();
         this.instancesEvaluated = 0;
-        //this.evaluator.widthOption.setValue(200);
     }
 
     @Override
@@ -91,16 +89,8 @@ public class KappaSingleOversampling extends AbstractClassifier implements Multi
         this.updateClassProportions(instance);
 
 
-        //double kappa = this.evaluator.getKappa();
-        //thetaValue = kappa;
-
-        // Update class proportions
-
-        //System.out.println(" ");
-
         //sum all values when computing imbalance ratio
         double imbalanceRatio = this.numberInstancesClassPrequential[(int) instance.classValue()] / this.numberInstancesClassPrequential[Utils.maxIndex(this.numberInstancesClassPrequential)];
-        //System.out.println("Imb Ratio" + imbalanceRatio + "Class "+instance.classValue());
 
 
         imbalanceRatio = imbalanceRatio * this.imbalanceWeightOption.getValue();
@@ -139,7 +129,7 @@ public class KappaSingleOversampling extends AbstractClassifier implements Multi
     private void oversampleandtrain(Instance instance, Instances neighbors, double imbalanceRatio,
                                     int numberOfNeighbors, double labelingBudget) {
 
-        //double labelingBudget = 0.05;
+
         double weight = 0;
         if (imbalanceRatio < 1) {
             weight = (1 / labelingBudget) * (1 - imbalanceRatio);
@@ -152,10 +142,7 @@ public class KappaSingleOversampling extends AbstractClassifier implements Multi
 
 
         for (int i = 0; i < k; i++) {
-
-
                 this.classifier.trainOnInstance(instance);
-
         }
     }
 

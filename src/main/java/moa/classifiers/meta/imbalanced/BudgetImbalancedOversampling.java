@@ -21,7 +21,7 @@ import moa.options.ClassOption;
 import utils.MathUtils;
 
 
-public class KappaImbOversampling extends AbstractClassifier implements MultiClassClassifier, CapabilitiesHandler {
+public class BudgetImbalancedOversampling extends AbstractClassifier implements MultiClassClassifier, CapabilitiesHandler {
 
     private static final long serialVersionUID = 1L;
 
@@ -31,9 +31,6 @@ public class KappaImbOversampling extends AbstractClassifier implements MultiCla
 
     public IntOption numberOfNeighborsOption = new IntOption("neighborSize", 'k', "Number of Neighbors", 10, 1,
             Integer.MAX_VALUE);
-
-    public IntOption maxInstancesOption = new IntOption("maxInstances", 'i', "Max number of instances to be created",
-            50, 1, Integer.MAX_VALUE);
 
     public FloatOption imbalanceWeightOption = new FloatOption("imbalanceWeight", 'f', "Weight to imbalance ratio",
             0, 0, 1);
@@ -63,7 +60,7 @@ public class KappaImbOversampling extends AbstractClassifier implements MultiCla
         this.nn = null;
         this.evaluator = new WindowKappaClassificationPerformanceEvaluator();
         this.instancesEvaluated = 0;
-        //this.evaluator.widthOption.setValue(200);
+
     }
 
     @Override
@@ -93,16 +90,10 @@ public class KappaImbOversampling extends AbstractClassifier implements MultiCla
         this.updateClassProportions(instance);
 
 
-        double kappa = this.evaluator.getKappa();
-        //thetaValue = kappa;
-
-        // Update class proportions
-
-        //System.out.println(" ");
 
         //sum all values when computing imbalance ratio
         double imbalanceRatio = this.numberInstancesClassPrequential[(int) instance.classValue()] / this.numberInstancesClassPrequential[Utils.maxIndex(this.numberInstancesClassPrequential)];
-        //System.out.println("Imb Ratio" + imbalanceRatio + "Class "+instance.classValue());
+
 
 
         imbalanceRatio = imbalanceRatio * this.imbalanceWeightOption.getValue();
@@ -113,13 +104,12 @@ public class KappaImbOversampling extends AbstractClassifier implements MultiCla
         int numberNeighborsSameClass = numberInstancesClassNeighborhood[(int) instance.classValue()];
 
         if (numberNeighborsSameClass == 0) { // rare
-//        	System.out.println("Instance type is rare");
+            //        	System.out.println("Instance type is rare");
         } else if (numberNeighborsSameClass < this.numberOfNeighborsOption.getValue() * this.safeCuttingOption.getValue()) { // borderline
-//        	System.out.println("Instance type is overlapping");
+            //        	System.out.println("Instance type is overlapping");
         } else { // safe example
-//        	System.out.println("Instance type is safe");
-            oversampleandtrain(instance, neighbors, imbalanceRatio , kappa, numberNeighborsSameClass,
-                    this.labelingBudgetOption.getValue());
+            //        	System.out.println("Instance type is safe");
+            oversampleandtrain(instance, neighbors, imbalanceRatio , this.labelingBudgetOption.getValue());
         }
     }
 
@@ -138,10 +128,8 @@ public class KappaImbOversampling extends AbstractClassifier implements MultiCla
 
     }
 
-    private void oversampleandtrain(Instance instance, Instances neighbors, double imbalanceRatio, double kappa,
-                                    int numberOfNeighbors, double labelingBudget) {
+    private void oversampleandtrain(Instance instance, Instances neighbors, double imbalanceRatio, double labelingBudget) {
 
-        //double labelingBudget = 0.05;
         double weight = 0;
         if (imbalanceRatio < 1) {
             weight = (1 / labelingBudget) * (1 - imbalanceRatio);
@@ -162,8 +150,6 @@ public class KappaImbOversampling extends AbstractClassifier implements MultiCla
             }
 
             Instances syntheticInstances = generateLineInstances(instance, neighbors.get(randomNeighbor), 1);
-
-//            System.out.println("Generating using neighbor " + neighbors.get(randomNeighbor).hashCode() + " current " + instance.hashCode());
 
             generatedInstances += syntheticInstances.numInstances();
 
@@ -189,26 +175,6 @@ public class KappaImbOversampling extends AbstractClassifier implements MultiCla
         return true;
     }
 
-    private Instances generateGaussInstances(Instance instance, Instance neighbor, int numGenerations ) {
-        Instances generatedInstances = new Instances(instance.dataset(), 0);
-        double radius = MathUtils.euclideanDist(instance, neighbor) / 2.0;
-
-        for (int i = 0; i < numGenerations; i++) {
-            Instance newInstance = instance.copy();
-            newInstance.setClassValue(instance.classValue());
-
-            for (int j = 0; j < instance.numAttributes() - 1; j++) {
-                if (instance.attribute(j).isNumeric()) {
-                    newInstance.setValue(j,
-                            this.classifierRandom.nextGaussian() * (radius / 3.0) + ((instance.value(j) + neighbor.value(j)) / 2.0));
-                } else {
-                    newInstance.setValue(j, this.classifierRandom.nextBoolean() ? instance.value(j) : neighbor.value(j));
-                }
-            }
-            generatedInstances.add(newInstance);
-        }
-        return generatedInstances;
-    }
 
 
     private Instances generateLineInstances(Instance instance, Instance neighbor, int numGenerations) {
