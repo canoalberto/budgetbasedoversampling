@@ -23,13 +23,25 @@ methods in the domain.
 
 Download the pre-compiled jar files or import the project source code into [MOA](https://github.com/Waikato/moa). See the src/main/java/experiments folder to reproduce our research. We use the [MOA framework](https://moa.cms.waikato.ac.nz/) and its class hierarchy. Adding a new algorithm, generator, or evaluator is the same as adding it in MOA (see [MOA documentation](https://moa.cms.waikato.ac.nz/documentation/)).
 
+Download the pre-compiled budgetbasedoversampling-1.0-jar-with-dependencies.jar or import the project source code into MOA. Download the multi-class [datasets](https://drive.google.com/drive/folders/19WDAxEZPtPJ0GC48_aYdCE0M9BdW3iEC?usp=share_link). 
+
+```
+java -javaagent:sizeofag-1.0.4.jar -cp budgetbasedoversampling-1.0-jar-with-dependencies.jar moa.DoTask moa.tasks.meta.ALPrequentialEvaluationTask 
+    -e "(ALMultiClassImbalancedPerformanceEvaluator -w 500) 
+    -s "(ArffFileStream -f datasets/semi-synth/CRIMES-D1.arff)"
+    -l "(moa.classifiers.active.ALRandom -l (moa.classifiers.meta.imbalanced.BudgetImbalancedOversampling -l moa.classifiers.trees.HDVFDT)" 
+    -b "(moa.classifiers.active.budget.FixedBM -b 0.1))"
+    -f 500 -d results.csv
+```
+
 The package `src/main/java/experiments/active` provides the scripts for the experiments experiments. Use any of the scripts provided at `src/main/java/experiments/active` for the different groups of experiments and add your algorithm, generator, or evaluator. These scripts will generate the command lines used to run the experiments
 
 ## Citation
 ```
-@article{aguiar2023active,
+@inproceedings{aguiar2023active,
   title={An active learning budget-based oversampling approach for partially labeled multi-class imbalanced data streams},
   author={Aguiar, Gabriel J and Cano, Alberto},
+  booktitle={38th ACM/SIGAPP Symposium On Applied Computing},
   year={2023}
 }
 ```

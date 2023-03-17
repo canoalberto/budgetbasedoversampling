@@ -11,7 +11,7 @@ public class Semisynth {
 	public static void main(String[] args) throws Exception {
 		
 		String absolutePath = SystemUtils.IS_OS_UNIX ? "/home/acano/Downloads/activelearning/" : "D:/activelearning/";
-		String resultsPath = "results/uncertainty-kappaoversampling/semi-synth/";
+		String resultsPath = "results/uncertainty-budgetbasedoversampling/semi-synth/";
 
 		String[] datasets = new String[] {
 				"CRIMES-D1",
@@ -107,7 +107,7 @@ public class Semisynth {
 					for(int budget = 0; budget < budgets.length; budget++) {
 				
 						String VMargs = "-Xms8g -Xmx1024g";
-						String jarFile = "kappaoversampling-1.0-jar-with-dependencies.jar";
+						String jarFile = "budgetbasedoversampling-1.0-jar-with-dependencies.jar";
 		
 						String filename = absolutePath+resultsPath + algorithmsFilename[alg] + "-" + datasets[dataset] + "-" + activeLearningStrategies[strategy] + "-" + budgets[budget] + ".csv";
 	
@@ -115,12 +115,12 @@ public class Semisynth {
 							System.out.println("semi-" + seq + ": ");
 
 							if (activeLearningStrategies[strategy].equals("Random")){
-								resultsPath = "results/random-kappaoversampling/semi-synth/";
+								resultsPath = "results/random-budgetbasedoversampling/semi-synth/";
 								System.out.println("\tjava " + VMargs + " -javaagent:sizeofag-1.0.4.jar -cp " + jarFile + " "
 										+ "moa.DoTask moa.tasks.meta.ALPrequentialEvaluationTask"
 										+ " -e \"(ALMultiClassImbalancedPerformanceEvaluator -w 500)\""
 										+ " -s \"(ArffFileStream -f datasets/semi-synth/" + datasets[dataset] + ".arff)\""
-										+ " -l \"(moa.classifiers.active.ALRandom -l (moa.classifiers.meta.imbalanced.KappaOversampling -l " + algorithms[alg] + ") -b (moa.classifiers.active.budget.FixedBM -b " + budgets[budget] + "))\""
+										+ " -l \"(moa.classifiers.active.ALRandom -l (moa.classifiers.meta.imbalanced.BudgetImbalancedOversampling -l " + algorithms[alg] + ") -b (moa.classifiers.active.budget.FixedBM -b " + budgets[budget] + "))\""
 										+ " -f 500"
 										+ " -d " + resultsPath + algorithmsFilename[alg] + "-" + datasets[dataset] + "-" + activeLearningStrategies[strategy] + "-" + budgets[budget] + ".csv");
 
@@ -131,7 +131,7 @@ public class Semisynth {
 										+ "moa.DoTask moa.tasks.meta.ALPrequentialEvaluationTask"
 										+ " -e \"(ALMultiClassImbalancedPerformanceEvaluator -w 500)\""
 										+ " -s \"(ArffFileStream -f datasets/semi-synth/" + datasets[dataset] + ".arff)\""
-										+ " -l \"(moa.classifiers.active.ALUncertainty -l (moa.classifiers.meta.imbalanced.KappaOversampling -l " + algorithms[alg] + ") -d " + activeLearningStrategies[strategy] + " -b " + budgets[budget] + ")\""
+										+ " -l \"(moa.classifiers.active.ALUncertainty -l (moa.classifiers.meta.imbalanced.BudgetImbalancedOversampling -l " + algorithms[alg] + ") -d " + activeLearningStrategies[strategy] + " -b " + budgets[budget] + ")\""
 										+ " -f 500"
 										+ " -d " + resultsPath + algorithmsFilename[alg] + "-" + datasets[dataset] + "-" + activeLearningStrategies[strategy] + "-" + budgets[budget] + ".csv");
 							}

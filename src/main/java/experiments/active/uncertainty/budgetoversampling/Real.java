@@ -11,7 +11,7 @@ public class Real {
 	public static void main(String[] args) throws Exception {
 		
 		String absolutePath = SystemUtils.IS_OS_UNIX ? "/home/acano/Downloads/activelearning/" : "D:/activelearning/";
-		String resultsPath = "results/uncertainty-kappaoversampling/real/";
+		String resultsPath = "results/uncertainty-budgetbasedoversampling/real/";
 
 		String[] datasets = new String[] {
 				"activity",
@@ -114,7 +114,7 @@ public class Real {
 					for(int budget = 0; budget < budgets.length; budget++) {
 				
 						String VMargs = "-Xms8g -Xmx1024g";
-						String jarFile = "kappaoversampling-1.0-jar-with-dependencies.jar";
+						String jarFile = "budgetbasedoversampling-1.0-jar-with-dependencies.jar";
 		
 						String filename = absolutePath+resultsPath + algorithmsFilename[alg] + "-" + datasets[dataset] + "-" + activeLearningStrategies[strategy] + "-" + budgets[budget] + ".csv";
 	
@@ -122,7 +122,7 @@ public class Real {
 							System.out.println("real-" + seq + ": ");
 
 							if (activeLearningStrategies[strategy].equals("Random")){
-								resultsPath = "results/random-kappaoversampling/semi-synth/";
+								resultsPath = "results/random-budgetbasedoversampling/semi-synth/";
 								System.out.println("\tjava " + VMargs + " -javaagent:sizeofag-1.0.4.jar -cp " + jarFile + " "
 										+ "moa.DoTask moa.tasks.meta.ALPrequentialEvaluationTask"
 										+ " -e \"(ALMultiClassImbalancedPerformanceEvaluator -w 500)\""

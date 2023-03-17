@@ -115,7 +115,7 @@ public class Real {
 					for(int budget = 0; budget < budgets.length; budget++) {
 				
 						String VMargs = "-Xms8g -Xmx1024g";
-						String jarFile = "kappaoversampling-1.0-jar-with-dependencies.jar";
+						String jarFile = "budgetbasedoversampling-1.0-jar-with-dependencies.jar";
 		
 						String filename = absolutePath+resultsPath + algorithmsFilename[alg] + "-" + datasets[dataset] + "-" + activeLearningStrategies[strategy] + "-" + budgets[budget] + "-" + numberOversampledInstances + ".csv";
 	
@@ -126,7 +126,7 @@ public class Real {
 									+ "moa.DoTask moa.tasks.meta.ALPrequentialEvaluationTask"
 									+ " -e \"(ALMultiClassImbalancedPerformanceEvaluator -w 500)\""
 									+ " -s \"(ArffFileStream -f datasets/real/" + datasets[dataset] + ".arff)\"" 
-									+ " -l \"(moa.classifiers.active.ALUncertainty -l (moa.classifiers.meta.imbalanced.FixedOversampling -i " + numberOversampledInstances + " -l " + algorithms[alg] + ") -d " + activeLearningStrategies[strategy] + " -b " + budgets[budget] + ")\""
+									+ " -l \"(moa.classifiers.active.ALUncertainty -l (moa.classifiers.meta.imbalanced.BudgetSingleOversampling -i " + numberOversampledInstances + " -l " + algorithms[alg] + ") -d " + activeLearningStrategies[strategy] + " -b " + budgets[budget] + ")\""
 									+ " -f 500"
 									+ " -d " + resultsPath + algorithmsFilename[alg] + "-" + datasets[dataset] + "-" + activeLearningStrategies[strategy] + "-" + budgets[budget] + "-" + numberOversampledInstances + ".csv");
 						}
