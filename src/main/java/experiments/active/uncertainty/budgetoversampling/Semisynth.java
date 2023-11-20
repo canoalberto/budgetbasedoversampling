@@ -2,15 +2,13 @@ package experiments.active.uncertainty.budgetoversampling;
 
 import java.io.File;
 
-import org.apache.commons.lang3.SystemUtils;
-
 import utils.Utils;
 
 public class Semisynth {
 
 	public static void main(String[] args) throws Exception {
 		
-		String absolutePath = SystemUtils.IS_OS_UNIX ? "/home/acano/Downloads/activelearning/" : "D:/activelearning/";
+		String absolutePath = "/home/user/activelearning/";
 		String resultsPath = "results/uncertainty-budgetbasedoversampling/semi-synth/";
 
 		String[] datasets = new String[] {

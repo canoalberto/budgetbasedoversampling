@@ -2,15 +2,13 @@ package experiments.active.uncertainty.budgetoversampling;
 
 import java.io.File;
 
-import org.apache.commons.lang3.SystemUtils;
-
 import utils.Utils;
 
 public class Real {
 
 	public static void main(String[] args) throws Exception {
 		
-		String absolutePath = SystemUtils.IS_OS_UNIX ? "/home/acano/Downloads/activelearning/" : "D:/activelearning/";
+		String absolutePath = "/home/user/activelearning/";
 		String resultsPath = "results/uncertainty-budgetbasedoversampling/real/";
 
 		String[] datasets = new String[] {
@@ -161,7 +159,7 @@ public class Real {
 					datasetsFilename[i] = datasetsFilename[i] + "-" + activeLearningStrategies[strategy] + "-" + budgets[budget];
 				
 //				Utils.metric("Kappa", "averaged", absolutePath+resultsPath, algorithmsFilename, datasetsFilename);
-				Utils.metric("PMAUC", "averaged", absolutePath+resultsPath, algorithmsFilename, datasetsFilename);
+//				Utils.metric("PMAUC", "averaged", absolutePath+resultsPath, algorithmsFilename, datasetsFilename);
 //				Utils.metric("WMAUC", "averaged", absolutePath+resultsPath, algorithmsFilename, datasetsFilename);
 //				Utils.metric("EWMAUC", "averaged", absolutePath+resultsPath, algorithmsFilename, datasetsFilename);
 //				Utils.metric("Accuracy", "averaged", absolutePath+resultsPath, algorithmsFilename, datasetsFilename);

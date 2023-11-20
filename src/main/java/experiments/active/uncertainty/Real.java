@@ -2,15 +2,13 @@ package experiments.active.uncertainty;
 
 import java.io.File;
 
-import org.apache.commons.lang3.SystemUtils;
-
 import utils.Utils;
 
 public class Real {
 
 	public static void main(String[] args) throws Exception {
 		
-		String absolutePath = SystemUtils.IS_OS_UNIX ? "/home/acano/Downloads/activelearning/" : "D:/activelearning/";
+		String absolutePath = "/home/user/activelearning/";
 		String resultsPath = "results/uncertainty/real/";
 
 		String[] datasets = new String[] {
@@ -114,15 +112,13 @@ public class Real {
 					for(int budget = 0; budget < budgets.length; budget++) {
 				
 						String VMargs = "-Xms8g -Xmx1024g";
-						String jarFile = "kappaoversampling-1.0-jar-with-dependencies.jar";
+						String jarFile = "budgetbasedoversampling-1.0-jar-with-dependencies.jar";
 		
 						String filename = absolutePath+resultsPath + algorithmsFilename[alg] + "-" + datasets[dataset] + "-" + activeLearningStrategies[strategy] + "-" + budgets[budget] + ".csv";
 	
 						if(!new File(filename).exists()) {
 							System.out.println("real-" + seq + ": ");
 
-
-							
 							System.out.println("\tjava " + VMargs + " -javaagent:sizeofag-1.0.4.jar -cp " + jarFile + " "
 									+ "moa.DoTask moa.tasks.meta.ALPrequentialEvaluationTask"
 									+ " -e \"(ALMultiClassImbalancedPerformanceEvaluator -w 500)\""

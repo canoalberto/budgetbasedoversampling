@@ -2,15 +2,13 @@ package experiments.active.uncertainty;
 
 import java.io.File;
 
-import org.apache.commons.lang3.SystemUtils;
-
 import utils.Utils;
 
 public class Semisynth {
 
     public static void main(String[] args) throws Exception {
 
-        String absolutePath = SystemUtils.IS_OS_UNIX ? "/home/acano/Downloads/activelearning/" : "D:/activelearning/";
+    	String absolutePath = "/home/user/activelearning/";
         String resultsPath = "results/uncertainty/semi-synth/";
 
         String[] datasets = new String[]{"CRIMES-D1", "DJ30-D1", "GAS-D1", "OLYMPIC-D1", "POKER-D1", "SENSOR-D1",
@@ -29,8 +27,7 @@ public class Semisynth {
                     ".trees.", "").replaceAll("moa.classifiers.ann.meta.", "").replaceAll("moa.classifiers.active.",
                     "").replaceAll("[()]", "");
 
-        //String[] activeLearningStrategies = new String [] {"FixedUncertainty", "VarUncertainty",
-        // "RandVarUncertainty", "SelSampling"};
+        //String[] activeLearningStrategies = new String [] {"FixedUncertainty", "VarUncertainty", "RandVarUncertainty", "SelSampling"};
         String[] activeLearningStrategies = new String[]{"RandVarUncertainty"};
         double[] budgets = new double[]{1, 0.5, 0.2, 0.1, 0.05, 0.01, 0.005, 0.001};
 
@@ -53,9 +50,7 @@ public class Semisynth {
 
                     for (int alg = 0; alg < algorithms.length; alg++) {
                         if (lines[alg] != maxlines) {
-                            String filename =
-                                    absolutePath + resultsPath + algorithmsFilename[alg] + "-" + datasets[dataset] +
-                                            "-" + activeLearningStrategies[strategy] + "-" + budgets[budget] + ".csv";
+                            String filename = absolutePath + resultsPath + algorithmsFilename[alg] + "-" + datasets[dataset] + "-" + activeLearningStrategies[strategy] + "-" + budgets[budget] + ".csv";
                             System.out.println("Incomplete file " + lines[alg] + "\t" + maxlines + "\t" + filename);
                             //new File(path + filename).delete();
                         }
@@ -96,23 +91,18 @@ public class Semisynth {
                     for (int budget = 0; budget < budgets.length; budget++) {
 
                         String VMargs = "-Xms8g -Xmx1024g";
-                        String jarFile = "kappaoversampling-1.0-jar-with-dependencies.jar";
+                        String jarFile = "budgetbasedoversampling-1.0-jar-with-dependencies.jar";
 
-                        String filename =
-                                absolutePath + resultsPath + algorithmsFilename[alg] + "-" + datasets[dataset] + "-" + activeLearningStrategies[strategy] + "-" + budgets[budget] + ".csv";
+                        String filename = absolutePath + resultsPath + algorithmsFilename[alg] + "-" + datasets[dataset] + "-" + activeLearningStrategies[strategy] + "-" + budgets[budget] + ".csv";
 
                         if (!new File(filename).exists()) {
-
 
                             System.out.println("semi-" + seq + ": ");
 
                             if (activeLearningStrategies[strategy].equals("Random")) {
                                 resultsPath = "results/random-kappaoversampling/semi-synth/";
                                 System.out.println("\tjava " + VMargs + " -javaagent:sizeofag-1.0.4.jar -cp " + jarFile + " " + "moa.DoTask moa.tasks.meta.ALPrequentialEvaluationTask" + " -e \"(ALMultiClassImbalancedPerformanceEvaluator -w 500)\"" + " -s \"(ArffFileStream -f datasets/semi-synth/" + datasets[dataset] + ".arff)\"" + " -l \"(moa.classifiers.active.ALRandom -l (" + algorithms[alg] + " ) -b (moa.classifiers.active.budget.FixedBM -b " + budgets[budget] + "))\"" + " -f 500" + " -d " + resultsPath + algorithmsFilename[alg] + "-" + datasets[dataset] + "-" + activeLearningStrategies[strategy] + "-" + budgets[budget] + ".csv");
-
-
                             } else {
-
                                 System.out.println("\tjava " + VMargs + " -javaagent:sizeofag-1.0.4.jar -cp " + jarFile + " " + "moa.DoTask moa.tasks.meta.ALPrequentialEvaluationTask" + " -e \"(ALMultiClassImbalancedPerformanceEvaluator -w 500)\"" + " -s \"(ArffFileStream -f datasets/semi-synth/" + datasets[dataset] + ".arff)\"" + " -l \"(moa.classifiers.active.ALUncertainty -l (" + algorithms[alg] + ") -d " + activeLearningStrategies[strategy] + " -b " + budgets[budget] + ")\"" + " -f 500" + " -d " + resultsPath + algorithmsFilename[alg] + "-" + datasets[dataset] + "-" + activeLearningStrategies[strategy] + "-" + budgets[budget] + ".csv");
                             }
                         }
@@ -131,8 +121,7 @@ public class Semisynth {
                 String[] datasetsFilename = datasets.clone();
 
                 for (int i = 0; i < datasetsFilename.length; i++)
-                    datasetsFilename[i] =
-                            datasetsFilename[i] + "-" + activeLearningStrategies[strategy] + "-" + budgets[budget];
+                    datasetsFilename[i] = datasetsFilename[i] + "-" + activeLearningStrategies[strategy] + "-" + budgets[budget];
 
 //				Utils.metric("Kappa", "averaged", absolutePath+resultsPath, algorithmsFilename, datasetsFilename);
                 Utils.metric("PMAUC", "averaged", absolutePath + resultsPath, algorithmsFilename, datasetsFilename);
